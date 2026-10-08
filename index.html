@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0b1020" />
+  <meta name="description" content="SampadHelp — ابزارهای تمرکز، آزمون و سنجش عملکرد برای آمادگی سمپاد." />
+  <title>SampadHelp — Study OS</title>
+  <style>
+    :root{
+      --bg:#07101d;
+      --panel:#0e1726;
+      --panel-2:#111d30;
+      --card:#0c1625;
+      --line:rgba(255,255,255,.08);
+      --text:#eef4ff;
+      --muted:#93a4bc;
+      --accent:#57a6ff;
+      --accent-2:#7c5cff;
+      --success:#43d69b;
+      --danger:#ff6b7a;
+      --warning:#ffc857;
+      --shadow:0 20px 50px rgba(0,0,0,.28);
+      --radius:22px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      min-height:100vh;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 10% 0%, rgba(87,166,255,.13), transparent 28%),
+        radial-gradient(circle at 90% 10%, rgba(124,92,255,.12), transparent 26%),
+        linear-gradient(180deg,#08111e 0%,#050b14 100%);
+      font-family:Tahoma,Arial,sans-serif;
+      line-height:1.6;
+    }
+    button,input,select{font:inherit}
+    button{cursor:pointer}
+    .app{max-width:1280px;margin:auto;padding:20px}
+    .topbar{
+      display:flex;align-items:center;justify-content:space-between;gap:18px;
+      position:sticky;top:12px;z-index:20;
+      padding:14px 16px;border:1px solid var(--line);border-radius:20px;
+      background:rgba(7,16,29,.76);backdrop-filter:blur(16px);box-shadow:var(--shadow);
+    }
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand-mark{
+      width:42px;height:42px;border-radius:14px;
+      display:grid;place-items:center;font-weight:900;
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      color:#fff;box-shadow:0 12px 24px rgba(87,166,255,.2)
+    }
+    .brand h1{font-size:17px;margin:0}
+    .brand small{display:block;color:var(--muted);font-size:11px}
+    .nav{display:flex;gap:7px;flex-wrap:wrap}
+    .nav button,.ghost{
+      border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--muted);
+      padding:9px 12px;border-radius:12px
+    }
+    .nav button.active,.nav button:hover,.ghost:hover{
+      background:rgba(87,166,255,.11);color:var(--text);border-color:rgba(87,166,255,.28)
+    }
+    .hero{
+      padding:34px 8px 18px;
+      display:grid;grid-template-columns:1.2fr .8fr;gap:18px;align-items:stretch;
+    }
+    .hero-card,.panel,.tool-card{
+      border:1px solid var(--line);background:linear-gradient(180deg,rgba(17,29,48,.96),rgba(9,18,31,.96));
+      border-radius:var(--radius);box-shadow:var(--shadow)
+    }
+    .hero-card{padding:34px}
+    .eyebrow{color:#9fc9ff;font-size:12px;font-weight:800;letter-spacing:.6px}
+    .hero h2{font-size:clamp(30px,4vw,56px);line-height:1.12;margin:12px 0}
+    .hero p{color:var(--muted);max-width:720px;margin:0 0 22px}
+    .cta-row{display:flex;gap:10px;flex-wrap:wrap}
+    .primary{
+      border:0;padding:12px 17px;border-radius:13px;color:#06101c;font-weight:900;
+      background:linear-gradient(135deg,#a7d6ff,#62aaff);box-shadow:0 12px 24px rgba(87,166,255,.18)
+    }
+    .secondary{
+      border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:var(--text);
+      padding:12px 17px;border-radius:13px
+    }
+    .hero-side{padding:22px;display:flex;flex-direction:column;justify-content:space-between}
+    .mini-stat{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line)}
+    .mini-stat:last-child{border-bottom:0}
+    .mini-stat span{color:var(--muted);font-size:13px}
+    .mini-stat strong{font-size:22px}
+    .section{display:none}
+    .section.active{display:block}
+    .section-head{display:flex;align-items:end;justify-content:space-between;gap:15px;margin:22px 0 14px}
+    .section-head h3{margin:0;font-size:22px}
+    .section-head p{margin:4px 0 0;color:var(--muted);font-size:13px}
+    .grid{display:grid;gap:14px}
+    .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .panel{padding:20px}
+    .tool-card{padding:18px;display:flex;flex-direction:column;gap:14px}
+    .tool-card h4{margin:0;font-size:16px}
+    .tool-card p{margin:0;color:var(--muted);font-size:12px}
+    .tool-icon{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:rgba(87,166,255,.12);border:1px solid rgba(87,166,255,.18);font-size:22px}
+    .tool-link{color:#b7d8ff;font-weight:800;font-size:12px}
+    .score-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .field{display:flex;flex-direction:column;gap:7px}
+    .field label{font-size:12px;color:var(--muted)}
+    .field input,.field select{
+      width:100%;padding:12px 13px;border-radius:13px;border:1px solid var(--line);
+      background:#081221;color:var(--text);outline:none
+    }
+    .field input:focus,.field select:focus{border-color:rgba(87,166,255,.45);box-shadow:0 0 0 3px rgba(87,166,255,.08)}
+    .result{
+      margin-top:15px;padding:20px;border-radius:18px;
+      background:rgba(255,255,255,.035);border:1px solid var(--line)
+    }
+    .score-big{font-size:44px;font-weight:900;line-height:1}
+    .muted{color:var(--muted)}
+    .timer-wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:14px}
+    .timer-card{min-height:350px;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center}
+    .timer-display{
+      font-variant-numeric:tabular-nums;
+      font-size:clamp(65px,9vw,110px);font-weight:900;letter-spacing:3px;line-height:1;
+      margin:10px 0 25px
+    }
+    .timer-mode{font-size:13px;color:var(--muted)}
+    .controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+    .controls button{
+      border:1px solid var(--line);background:#0a1424;color:var(--text);padding:10px 15px;border-radius:12px
+    }
+    .controls .primary{color:#07101b}
+    .preset-row{display:flex;gap:8px;flex-wrap:wrap}
+    .preset-row button{padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--muted)}
+    .preset-row button:hover{color:var(--text)}
+    .pomodoro-ring{
+      width:185px;height:185px;border-radius:50%;display:grid;place-items:center;
+      background:conic-gradient(var(--accent) 0deg, rgba(255,255,255,.06) 0deg);
+      margin:4px auto 18px;position:relative
+    }
+    .pomodoro-ring::after{content:"";position:absolute;inset:12px;border-radius:50%;background:#081321;border:1px solid var(--line)}
+    .pomodoro-content{position:relative;z-index:2;text-align:center}
+    .pomodoro-content .timer-display{font-size:43px;margin:0}
+    .tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:13px}
+    .tabs button{border:1px solid var(--line);background:transparent;color:var(--muted);padding:9px 12px;border-radius:11px}
+    .tabs button.active{background:rgba(87,166,255,.11);color:var(--text);border-color:rgba(87,166,255,.25)}
+    .history-row{
+      display:grid;grid-template-columns:1.2fr .7fr .7fr .7fr;gap:8px;
+      padding:12px 0;border-bottom:1px solid var(--line);font-size:12px
+    }
+    .history-row.head{color:var(--muted);font-weight:800}
+    .meter{height:10px;background:#07111d;border-radius:999px;overflow:hidden;border:1px solid var(--line)}
+    .meter > div{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--accent-2))}
+    .note{padding:12px 14px;border-radius:14px;background:rgba(255,200,87,.08);border:1px solid rgba(255,200,87,.18);color:#ffe4a0;font-size:12px}
+    .success-note{background:rgba(67,214,155,.08);border-color:rgba(67,214,155,.18);color:#adf1d3}
+    .danger-note{background:rgba(255,107,122,.08);border-color:rgba(255,107,122,.18);color:#ffc2ca}
+    .check-list{display:grid;gap:9px}
+    .check{display:flex;align-items:center;gap:10px;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.02)}
+    .check input{accent-color:var(--accent)}
+    .empty{padding:30px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:16px}
+    footer{padding:26px 8px;color:var(--muted);font-size:11px;text-align:center}
+    .toast{
+      position:fixed;bottom:18px;right:18px;z-index:50;
+      background:#0f1b2d;border:1px solid var(--line);border-radius:14px;padding:11px 14px;
+      transform:translateY(20px);opacity:0;pointer-events:none;transition:.25s
+    }
+    .toast.show{transform:translateY(0);opacity:1}
+    @media(max-width:900px){.hero,.timer-wrap{grid-template-columns:1fr}.grid-3{grid-template-columns:1fr 1fr}}
+    @media(max-width:640px){
+      .app{padding:12px}.topbar{position:static}.nav{display:none}.hero{padding-top:18px}.hero-card{padding:24px}
+      .grid-2,.grid-3,.score-grid{grid-template-columns:1fr}.history-row{grid-template-columns:1fr 1fr}
+      .history-row.head{display:none}.timer-card{min-height:290px}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">S</div>
+        <div>
+          <h1>SampadHelp</h1>
+          <small>Study OS برای مسیر سمپاد</small>
+        </div>
+      </div>
+      <nav class="nav" id="nav">
+        <button data-section="home" class="active">خانه</button>
+        <button data-section="score">درصدگیر</button>
+        <button data-section="timer">تایمر</button>
+        <button data-section="pomodoro">پومودورو</button>
+        <button data-section="history">آمار</button>
+      </nav>
+      <button class="ghost" id="resetAll">پاک‌سازی داده‌ها</button>
+    </header>
+
+    <section class="section active" id="home">
+      <div class="hero">
+        <div class="hero-card">
+          <div class="eyebrow">SAMPAD • FOCUS • PRACTICE</div>
+          <h2>آزمونت را جدی بگیر؛<br>تمرینت را هوشمند کن.</h2>
+          <p>یک داشبورد ساده برای درصدگیری، مدیریت زمان، پومودورو و ثبت روند مطالعه. بدون ثبت‌نام و بدون نیاز به سرور؛ داده‌ها فقط در مرورگر خودت ذخیره می‌شوند.</p>
+          <div class="cta-row">
+            <button class="primary" data-go="score">محاسبه درصد</button>
+            <button class="secondary" data-go="pomodoro">شروع پومودورو</button>
+          </div>
+        </div>
+        <div class="hero-side panel">
+          <div class="mini-stat"><span>جلسات مطالعه</span><strong id="homeSessions">0</strong></div>
+          <div class="mini-stat"><span>زمان تمرکز</span><strong id="homeFocus">0 دقیقه</strong></div>
+          <div class="mini-stat"><span>آخرین درصد</span><strong id="homeScore">—</strong></div>
+          <div class="note">نکته: برای شبیه‌سازی آزمون حضوری، دفترچه را پرینت کن و تایمر را از همین‌جا اجرا کن.</div>
+        </div>
+      </div>
+
+      <div class="section-head">
+        <div><h3>ابزارهای اصلی</h3><p>چیزهایی که برای تمرین روزانه واقعاً به کار می‌آیند.</p></div>
+      </div>
+      <div class="grid grid-3">
+        <article class="tool-card"><div class="tool-icon">%</div><h4>درصدگیر آزمون</h4><p>تعداد درست، غلط و نزده را وارد کن و درصد نهایی را فوری ببین.</p><a href="#" class="tool-link" data-go="score">باز کردن →</a></article>
+        <article class="tool-card"><div class="tool-icon">⏱</div><h4>تایمر آزمون</h4><p>برای شبیه‌سازی زمان واقعی آزمون، شمارش معکوس بساز.</p><a href="#" class="tool-link" data-go="timer">باز کردن →</a></article>
+        <article class="tool-card"><div class="tool-icon">◴</div><h4>پومودورو</h4><p>جلسات تمرکز و استراحت را با ریتم ثابت مدیریت کن.</p><a href="#" class="tool-link" data-go="pomodoro">باز کردن →</a></article>
+        <article class="tool-card"><div class="tool-icon">▦</div><h4>تاریخچه عملکرد</h4><p>درصد آزمون‌ها و زمان تمرکزت را در همین مرورگر نگه دار.</p><a href="#" class="tool-link" data-go="history">باز کردن →</a></article>
+        <article class="tool-card"><div class="tool-icon">✓</div><h4>روتین امروز</h4><p>کارهای مهم را قبل و بعد از مطالعه تیک بزن.</p><button class="secondary" id="openRoutine">باز کردن روتین</button></article>
+        <article class="tool-card"><div class="tool-icon">⌁</div><h4>محاسبه سرعت تست</h4><p>میانگین زمان هر سؤال را از روی تعداد سؤال و زمان آزمون حساب کن.</p><button class="secondary" id="openSpeed">باز کردن سرعت</button></article>
+      </div>
+    </section>
+
+    <section class="section" id="score">
+      <div class="section-head"><div><h3>درصدگیر آزمون</h3><p>برای تحلیل سریع آزمون‌های آنلاین یا آزمون‌هایی که خودت با پرینت می‌زنی.</p></div></div>
+      <div class="panel">
+        <div class="score-grid">
+          <div class="field"><label>تعداد کل سؤال</label><input id="totalQ" type="number" min="0" value="50"></div>
+          <div class="field"><label>تعداد درست</label><input id="correctQ" type="number" min="0" value="40"></div>
+          <div class="field"><label>تعداد غلط</label><input id="wrongQ" type="number" min="0" value="6"></div>
+          <div class="field"><label>تعداد نزده</label><input id="blankQ" type="number" min="0" value="4"></div>
+          <div class="field"><label>نمره منفی</label>
+            <select id="penalty">
+              <option value="0">بدون نمره منفی</option>
+              <option value="0.3333333333" selected>هر ۳ غلط = ۱ درست</option>
+              <option value="0.25">هر ۴ غلط = ۱ درست</option>
+              <option value="0.2">هر ۵ غلط = ۱ درست</option>
+            </select>
+          </div>
+        </div>
+        <div class="cta-row" style="margin-top:14px">
+          <button class="primary" id="calcScore">محاسبه درصد</button>
+          <button class="secondary" id="saveScore">ذخیره نتیجه</button>
+          <button class="secondary" id="fillScore">نمونه ۱۰۰ سؤالی</button>
+        </div>
+        <div class="result" id="scoreResult">
+          <div class="muted">درصد نهایی</div>
+          <div class="score-big" id="scoreValue">78.00%</div>
+          <div class="muted" id="scoreDetail">۴۰ درست • ۶ غلط • ۴ نزده</div>
+          <div class="meter" style="margin-top:15px"><div id="scoreMeter" style="width:78%"></div></div>
+        </div>
+        <div class="note" style="margin-top:12px">قانون نمره منفی را قابل تنظیم گذاشتم تا برای آزمون‌های مختلف بتوانی روش محاسبه را عوض کنی.</div>
+      </div>
+    </section>
+
+    <section class="section" id="timer">
+      <div class="section-head"><div><h3>تایمر آزمون</h3><p>برای ساختن یک آزمون خانگی با شرایط شبیه جلسه واقعی.</p></div></div>
+      <div class="timer-wrap">
+        <div class="panel timer-card">
+          <div class="timer-mode">COUNTDOWN</div>
+          <div class="timer-display" id="countdownDisplay">01:00:00</div>
+          <div class="controls">
+            <button class="primary" id="timerStart">شروع</button>
+            <button id="timerPause">توقف</button>
+            <button id="timerReset">ریست</button>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="field"><label>ساعت</label><input id="hours" type="number" min="0" max="99" value="1"></div>
+          <div class="field" style="margin-top:10px"><label>دقیقه</label><input id="minutes" type="number" min="0" max="59" value="0"></div>
+          <div class="field" style="margin-top:10px"><label>ثانیه</label><input id="seconds" type="number" min="0" max="59" value="0"></div>
+          <div class="preset-row" style="margin-top:14px">
+            <button data-min="15">۱۵ دقیقه</button><button data-min="30">۳۰ دقیقه</button><button data-min="45">۴۵ دقیقه</button><button data-min="60">۶۰ دقیقه</button><button data-min="90">۹۰ دقیقه</button>
+          </div>
+          <div class="note" style="margin-top:16px">صدای پایان آزمون را فعال نگه داشته‌ام؛ مرورگر برای پخش صدا ممکن است نیاز به یک تعامل اولیه با صفحه داشته باشد.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="pomodoro">
+      <div class="section-head"><div><h3>پومودورو</h3><p>جلسه تمرکز، استراحت کوتاه و استراحت بلند؛ قابل تنظیم.</p></div></div>
+      <div class="timer-wrap">
+        <div class="panel timer-card">
+          <div class="pomodoro-ring" id="pomoRing">
+            <div class="pomodoro-content">
+              <div class="timer-mode" id="pomoMode">تمرکز</div>
+              <div class="timer-display" id="pomoDisplay">25:00</div>
+            </div>
+          </div>
+          <div class="controls">
+            <button class="primary" id="pomoStart">شروع</button>
+            <button id="pomoPause">توقف</button>
+            <button id="pomoReset">ریست</button>
+          </div>
+          <div class="muted" style="margin-top:10px">جلسه‌های کامل امروز: <strong id="pomoCount">0</strong></div>
+        </div>
+        <div class="panel">
+          <div class="grid grid-2">
+            <div class="field"><label>تمرکز (دقیقه)</label><input id="focusLen" type="number" min="1" max="180" value="25"></div>
+            <div class="field"><label>استراحت کوتاه</label><input id="shortLen" type="number" min="1" max="60" value="5"></div>
+            <div class="field"><label>استراحت بلند</label><input id="longLen" type="number" min="1" max="120" value="15"></div>
+            <div class="field"><label>هر چند جلسه؟</label><input id="longEvery" type="number" min="2" max="12" value="4"></div>
+          </div>
+          <div class="check-list" style="margin-top:14px">
+            <label class="check"><input type="checkbox" id="autoPomo" checked> بعد از پایان هر بخش، خودکار بخش بعدی شروع شود.</label>
+            <label class="check"><input type="checkbox" id="soundPomo" checked> هنگام پایان بخش صدای هشدار پخش شود.</label>
+          </div>
+          <button class="secondary" id="applyPomo" style="margin-top:14px">اعمال تنظیمات</button>
+          <div class="success-note note" style="margin-top:12px">پیشنهاد: در جلسه تمرکز فقط یک کار داشته باش؛ مثلاً «۲۰ تست هوش + تحلیل غلط‌ها».</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="history">
+      <div class="section-head"><div><h3>آمار و تاریخچه</h3><p>روند خودت را ببین؛ نه فقط یک نمره.</p></div><button class="secondary" id="exportData">خروجی JSON</button></div>
+      <div class="grid grid-3">
+        <div class="panel"><div class="muted">آزمون‌های ذخیره‌شده</div><div class="score-big" id="statTests">0</div></div>
+        <div class="panel"><div class="muted">میانگین درصد</div><div class="score-big" id="statAvg">—</div></div>
+        <div class="panel"><div class="muted">زمان تمرکز کل</div><div class="score-big" id="statFocus">0m</div></div>
+      </div>
+      <div class="panel" style="margin-top:14px">
+        <div class="history-row head"><div>تاریخ</div><div>درصد</div><div>درست</div><div>غلط</div></div>
+        <div id="historyList"></div>
+      </div>
+    </section>
+
+    <section class="section" id="modalRoutine" style="position:fixed;inset:0;z-index:40;background:rgba(1,7,14,.72);backdrop-filter:blur(8px);padding:22px;overflow:auto">
+      <div class="panel" style="max-width:650px;margin:70px auto">
+        <div class="section-head"><div><h3>روتین امروز</h3><p>چند تیک ساده برای اینکه مطالعه فقط روی کاغذ نماند.</p></div><button class="secondary" id="closeRoutine">بستن</button></div>
+        <div class="check-list">
+          <label class="check"><input type="checkbox" data-routine="warmup"> ۱۰ دقیقه گرم‌کردن ذهنی</label>
+          <label class="check"><input type="checkbox" data-routine="tests"> حل تست زمان‌دار</label>
+          <label class="check"><input type="checkbox" data-routine="analysis"> تحلیل همه غلط‌ها و نزده‌ها</label>
+          <label class="check"><input type="checkbox" data-routine="review"> مرور یک مبحث ضعیف</label>
+          <label class="check"><input type="checkbox" data-routine="rest"> خواب و استراحت کافی</label>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="modalSpeed" style="position:fixed;inset:0;z-index:40;background:rgba(1,7,14,.72);backdrop-filter:blur(8px);padding:22px;overflow:auto">
+      <div class="panel" style="max-width:600px;margin:70px auto">
+        <div class="section-head"><div><h3>سرعت تست</h3><p>میانگین زمان لازم برای هر سؤال را حساب کن.</p></div><button class="secondary" id="closeSpeed">بستن</button></div>
+        <div class="grid grid-2">
+          <div class="field"><label>تعداد سؤال</label><input id="speedQuestions" type="number" min="1" value="50"></div>
+          <div class="field"><label>زمان (دقیقه)</label><input id="speedMinutes" type="number" min="1" value="60"></div>
+        </div>
+        <div class="result" style="margin-top:14px"><div class="muted">میانگین زمان هر سؤال</div><div class="score-big" id="speedResult">72 ثانیه</div></div>
+        <button class="primary" id="calcSpeed">محاسبه</button>
+      </div>
+    </section>
+
+    <footer>SampadHelp © 2026 — ساخته‌شده برای تمرین بهتر، نه جایگزین آزمون رسمی.</footer>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const storageKey = "sampadhelp_v1";
+    const data = JSON.parse(localStorage.getItem(storageKey) || '{"tests":[],"focusMinutes":0,"sessions":0,"routine":{},"pomoCount":0}');
+    function save(){ localStorage.setItem(storageKey, JSON.stringify(data)); updateDashboard(); }
+
+    function toast(msg){
+      const t=$("toast"); t.textContent=msg; t.classList.add("show");
+      clearTimeout(window.__toast); window.__toast=setTimeout(()=>t.classList.remove("show"),2200);
+    }
+
+    function go(section){
+      document.querySelectorAll(".section[id]:not([id^='modal'])").forEach(s=>s.classList.remove("active"));
+      $(section).classList.add("active");
+      document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.section===section));
+      window.scrollTo({top:0,behavior:"smooth"});
+    }
+    document.querySelectorAll("[data-go]").forEach(el=>{
+      el.addEventListener("click",e=>{e.preventDefault();go(el.dataset.go)});
+    });
+    document.querySelectorAll(".nav button").forEach(b=>b.addEventListener("click",()=>go(b.dataset.section)));
+
+    function scoreCalc(){
+      const total=+$("totalQ").value || 0;
+    }
+    function calculateScore(){
+      const total=Math.max(0,+$("totalQ").value||0);
+      const correct=Math.max(0,+$("correctQ").value||0);
+      const wrong=Math.max(0,+$("wrongQ").value||0);
+      const blank=Math.max(0,+$("blankQ").value||0);
+      const penalty=+$("penalty").value||0;
+      const raw=(correct-(wrong*penalty));
+      const pct=total ? (raw/total)*100 : 0;
+      const safePct=Math.max(-100,Math.min(100,pct));
+      $("scoreValue").textContent=safePct.toFixed(2)+"%";
+      $("scoreDetail").textContent=correct+" درست • "+wrong+" غلط • "+blank+" نزده";
+      $("scoreMeter").style.width=Math.max(0,Math.min(100,safePct))+"%";
+      return {total,correct,wrong,blank,penalty,pct:safePct};
+    }
+    $("calcScore").onclick=()=>{calculateScore();toast("درصد محاسبه شد");};
+    $("fillScore").onclick=()=>{
+      $("totalQ").value=100;$("correctQ").value=76;$("wrongQ").value=14;$("blankQ").value=10;
+      calculateScore();toast("نمونه ۱۰۰ سؤالی آماده شد");
+    };
+    $("saveScore").onclick=()=>{
+      const r=calculateScore();
+      if(!r.total){toast("اول تعداد سؤال‌ها را وارد کن");return}
+      data.tests.unshift({date:new Date().toLocaleString("fa-IR"),score:r.pct,correct:r.correct,wrong:r.wrong,blank:r.blank,total:r.total});
+      data.tests=data.tests.slice(0,50); save(); renderHistory(); toast("نتیجه ذخیره شد");
+    };
+
+    let timerRemaining=3600, timerInterval=null;
+    function pad(n){return String(n).padStart(2,"0")}
+    function syncTimerFromInputs(){
+      const h=Math.max(0,+$("hours").value||0),m=Math.max(0,+$("minutes").value||0),s=Math.max(0,+$("seconds").value||0);
+      timerRemaining=h*3600+m*60+s; renderTimer();
+    }
+    function renderTimer(){
+      const h=Math.floor(timerRemaining/3600),m=Math.floor((timerRemaining%3600)/60),s=timerRemaining%60;
+      $("countdownDisplay").textContent=pad(h)+":"+pad(m)+":"+pad(s);
+    }
+    function stopTimer(){clearInterval(timerInterval);timerInterval=null}
+    $("timerStart").onclick=()=>{
+      if(!timerInterval && timerRemaining>0){
+        timerInterval=setInterval(()=>{
+          timerRemaining--;renderTimer();
+          if(timerRemaining<=0){stopTimer();beep();toast("زمان آزمون تمام شد");}
+        },1000)
+      }
+    };
+    $("timerPause").onclick=()=>stopTimer();
+    $("timerReset").onclick=()=>{stopTimer();syncTimerFromInputs()};
+    ["hours","minutes","seconds"].forEach(id=>$(id).addEventListener("input",()=>{if(!timerInterval) syncTimerFromInputs()}));
+    document.querySelectorAll("[data-min]").forEach(b=>b.onclick=()=>{
+      $("hours").value=Math.floor(+b.dataset.min/60);$("minutes").value=+b.dataset.min%60;$("seconds").value=0;syncTimerFromInputs();
+    });
+
+    let pomo={mode:"focus",remaining:1500,running:false,interval:null,cycle:0};
+    function pomoConfig(){
+      return {
+        focus:Math.max(1,+$("focusLen").value||25)*60,
+        short:Math.max(1,+$("shortLen").value||5)*60,
+        long:Math.max(1,+$("longLen").value||15)*60,
+        every:Math.max(2,+$("longEvery").value||4)
+      }
+    }
+    function renderPomo(){
+      const secs=pomo.remaining,m=Math.floor(secs/60),s=secs%60;
+      $("pomoDisplay").textContent=pad(m)+":"+pad(s);
+      const labels={focus:"تمرکز",short:"استراحت کوتاه",long:"استراحت بلند"};
+      $("pomoMode").textContent=labels[pomo.mode];
+      const cfg=pomoConfig();
+      const max=pomo.mode==="focus"?cfg.focus:pomo.mode==="short"?cfg.short:cfg.long;
+      const deg=max?Math.max(0,Math.min(360,(1-pomo.remaining/max)*360)):0;
+      $("pomoRing").style.background="conic-gradient(var(--accent) "+deg+"deg, rgba(255,255,255,.06) 0deg)";
+      $("pomoCount").textContent=data.pomoCount||0;
+    }
+    function setPomoMode(mode){
+      pomo.mode=mode;
+      const c=pomoConfig();
+      pomo.remaining=mode==="focus"?c.focus:mode==="short"?c.short:c.long;
+      renderPomo();
+    }
+    function nextPomo(){
+      if(pomo.mode==="focus"){
+        const nextBreak=(pomo.cycle+1)%pomoConfig().every===0?"long":"short";
+        pomo.cycle++;
+        data.pomoCount=(data.pomoCount||0)+1;
+        data.sessions=(data.sessions||0)+1;
+        data.focusMinutes=(data.focusMinutes||0)+pomoConfig().focus/60;
+        save();
+        setPomoMode(nextBreak);
+      }else setPomoMode("focus");
+      beep();
+    }
+    function stopPomo(){clearInterval(pomo.interval);pomo.interval=null;pomo.running=false}
+    $("pomoStart").onclick=()=>{
+      if(pomo.running)return;
+      pomo.running=true;
+      pomo.interval=setInterval(()=>{
+        pomo.remaining--;renderPomo();
+        if(pomo.remaining<=0){
+          stopPomo(); nextPomo();
+          if($("autoPomo").checked) $("pomoStart").click();
+          else toast("بخش بعدی آماده است");
+        }
+      },1000)
+    };
+    $("pomoPause").onclick=()=>stopPomo();
+    $("pomoReset").onclick=()=>{stopPomo();pomo.cycle=0;setPomoMode("focus")};
+    $("applyPomo").onclick=()=>{stopPomo();setPomoMode("focus");toast("تنظیمات پومودورو اعمال شد")};
+
+    function beep(){
+      if($("soundPomo")?.checked===false) return;
+      try{
+        const C=window.AudioContext||window.webkitAudioContext;if(!C)return;
+        const c=new C(),o=c.createOscillator(),g=c.createGain();
+        o.frequency.value=880;o.type="sine";g.gain.value=.08;o.connect(g);g.connect(c.destination);o.start();
+        setTimeout(()=>{o.stop();c.close()},500);
+      }catch{}
+    }
+
+    function renderHistory(){
+      const list=$("historyList");
+      if(!data.tests.length){list.innerHTML='<div class="empty">هنوز نتیجه‌ای ذخیره نکرده‌ای.</div>';return}
+      list.innerHTML=data.tests.map(t=>'<div class="history-row"><div>'+t.date+'</div><div>'+Number(t.score).toFixed(2)+'%</div><div>'+t.correct+'</div><div>'+t.wrong+'</div></div>').join("");
+      $("statTests").textContent=data.tests.length;
+      $("statAvg").textContent=(data.tests.reduce((a,b)=>a+b.score,0)/data.tests.length).toFixed(2)+"%";
+    }
+    function updateDashboard(){
+      $("homeSessions").textContent=data.sessions||0;
+      $("homeFocus").textContent=Math.round(data.focusMinutes||0)+" دقیقه";
+      $("homeScore").textContent=data.tests.length?Number(data.tests[0].score).toFixed(1)+"%":"—";
+      $("statFocus").textContent=Math.round(data.focusMinutes||0)+"m";
+      $("statTests").textContent=data.tests.length;
+      $("statAvg").textContent=data.tests.length?(data.tests.reduce((a,b)=>a+b.score,0)/data.tests.length).toFixed(2)+"%":"—";
+    }
+
+    $("openRoutine").onclick=()=>{$("modalRoutine").classList.add("active")};
+    $("closeRoutine").onclick=()=>{$("modalRoutine").classList.remove("active")};
+    $("openSpeed").onclick=()=>{$("modalSpeed").classList.add("active")};
+    $("closeSpeed").onclick=()=>{$("modalSpeed").classList.remove("active")};
+
+    const routine= data.routine || {};
+    document.querySelectorAll("[data-routine]").forEach(c=>{
+      c.checked=!!routine[c.dataset.routine];
+      c.onchange=()=>{data.routine[c.dataset.routine]=c.checked;save();};
+    });
+    $("calcSpeed").onclick=()=>{
+      const q=Math.max(1,+$("speedQuestions").value||1),m=Math.max(1,+$("speedMinutes").value||1);
+      const sec=(m*60/q);
+      $("speedResult").textContent=(sec>=60?(Math.floor(sec/60)+" دقیقه و "+Math.round(sec%60)+" ثانیه"):Math.round(sec)+" ثانیه");
+    };
+
+    $("exportData").onclick=()=>{
+      const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+      const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="sampadhelp-data.json";a.click();
+      setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+    };
+    $("resetAll").onclick=()=>{
+      if(confirm("همه آزمون‌ها و آمار محلی پاک شود؟")){
+        localStorage.removeItem(storageKey);location.reload();
+      }
+    };
+
+    // Fix accidental invalid visual placeholder from static template.
+    window.addEventListener("load",()=>{
+      syncTimerFromInputs();
+      renderPomo();
+      renderHistory();
+      updateDashboard();
+      calculateScore();
+      $("calcSpeed").click();
+    });
+  </script>
+</body>
+</html>
